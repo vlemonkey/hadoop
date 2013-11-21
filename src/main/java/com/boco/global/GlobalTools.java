@@ -23,6 +23,7 @@ public class GlobalTools {
 	
 	/**
 	 * 递归取得配置文件的properties
+	 * 用于HDFS DistributedCache
 	 * @param fileName 文件名
 	 * @param dirName 文件夹路径
 	 * @return

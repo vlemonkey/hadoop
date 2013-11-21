@@ -11,7 +11,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-import com.fish.global.GlobalTools;
+import com.boco.global.GlobalTools;
 
 public class ModelDriver extends Configured implements Tool{
 	
