@@ -1,0 +1,1 @@
+hadoop jar /home/boco/bao/hadoop.jar  com.fish.test.binary.ModelDriver bao/sms/input bao/sms/output/1

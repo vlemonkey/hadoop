@@ -1,0 +1,2 @@
+hadoop jar /home/boco/bao/hadoop.jar com.fish.test.outputtest.ModelDriver bao/hadoop/input bao/hadoop/output/1
+sleep 10

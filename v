@@ -1,0 +1,1 @@
+hadoop jar /home/boco/hadoop.jar com.fish.verify.ModelDriver bao/wangyou/output/-m-00000 bao/test
