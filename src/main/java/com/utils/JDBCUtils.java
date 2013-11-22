@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
-
 
 public class JDBCUtils {
 
@@ -25,28 +23,11 @@ public class JDBCUtils {
 	private JDBCUtils() {
 	}
 
-	public static void main(String[] args) {
-		Connection conn = getInstance("mysql");
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			stmt = conn.prepareStatement("select count(*) from CLASSIFY");
-			rs = stmt.executeQuery();
-
-			while (rs.next()) {
-				System.out.println(rs.getInt(1));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeResultSet(rs);
-			closePreparedStatement(null);
-			closeConnection(conn);
-		}
-	}
-	
-	
+	/**
+	 * 根据数据类型返回connections
+	 * @param jdbcType
+	 * @return
+	 */
 	public static Connection getInstance(String jdbcType) {
 		PRE = jdbcType;
 		DRIVER = getParam("driverClassName");
@@ -121,4 +102,26 @@ public class JDBCUtils {
 			}
 		}
 	}
+	
+	public static void main(String[] args) {
+		Connection conn = getInstance("mysql");
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			stmt = conn.prepareStatement("select count(*) from CLASSIFY");
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				System.out.println(rs.getInt(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeResultSet(rs);
+			closePreparedStatement(null);
+			closeConnection(conn);
+		}
+	}
+	
 }

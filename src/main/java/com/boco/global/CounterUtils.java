@@ -18,14 +18,10 @@ public class CounterUtils {
 	private static Properties prop = ConfigUtils.getConfig("/config/sql.properties");
 	
 	/**
-	 * 返回错误文件夹名字+枚举名
-	 * @param en
-	 * @return
+	 * 将counter信息保存到数据库中 
+	 * @param moduleName 自定义模块名称
+	 * @param job
 	 */
-	public static String getErrorDirectory(COUNTER c) {
-		return "error-data/".concat(c.name());
-	}
-	
 	public static void insert2Mysql(String moduleName, Job job) {
 		String sql = prop.getProperty("INSERT_CHECK_DETAIL");
 		Counters counters = null;
@@ -68,32 +64,17 @@ public class CounterUtils {
 			sql = null; conf = null; counters = null;
 		}
 	}
-	public static void insert2MysqlWithCost(String fkId, String moduleName, Counters counters,long startMs) {
-		String sql = prop.getProperty("INSERT_CHECK_DETAIL");
-		PreparedStatement stmt = null;
-		Connection conn = null;
-		try {
-			conn = JDBCUtils.getInstance("mysql");
-			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, Integer.parseInt(fkId));
-			stmt.setString(2, moduleName);
-			stmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-			int i = 4;
-			for (Enum<COUNTER> c : COUNTER.values()) {
-				long value = counters.findCounter(c).getValue();
-				stmt.setLong(i++, value);
-			}
-			stmt.setLong(i, (System.currentTimeMillis()-startMs));
-			stmt.executeUpdate();
-			
-		} catch (Exception e) {
-			System.err.println("connection error");
-			e.printStackTrace();
-		}finally {
-			JDBCUtils.closePreparedStatement(stmt);
-			JDBCUtils.closeConnection(conn);
-		}
+	
+	/**
+	 * 返回错误文件夹名字+枚举名
+	 * @param en
+	 * @return
+	 */
+	public static String getErrorDirectory(COUNTER c) {
+		return "error-data/".concat(c.name());
 	}
+	
 	public static void main(String[] args) {
+		
 	}
 }
