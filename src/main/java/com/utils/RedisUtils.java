@@ -17,35 +17,20 @@ import org.apache.hadoop.io.Text;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Pipeline;
 
 public final class RedisUtils {
 	private static final String COLUMNS = ".COLUMNS";
 	private static final String KEY_VALUE = ".KEY_VALUE";
-	private static final String CONFIG_PATH = "/config/redis_meta_data.properties";
 
-	private static int PORT; // 6379 redis port
-	private static String HOST; // "10.0.7.239" redis host
-
-	private static JedisPoolConfig config = null; // Jedis客户端池配置
-	private static JedisPool pool = null; // Jedis客户端池
 	private static Jedis j = null;
 	private static Properties prop;
+	private static JedisPool pool = null; // Jedis客户端池
 	private final static Pattern p = Pattern.compile(","); // 逗号分割
 
 	static {
-		prop = ConfigUtils.getConfig(CONFIG_PATH);
-
-		HOST = prop.getProperty("REDIS.HOST");
-		PORT = Integer.parseInt(prop.getProperty("REDIS.PORT"));
-
-		config = new JedisPoolConfig();
-		config.setMaxActive(60000);
-		config.setMaxIdle(1000);
-		config.setMaxWait(10000);
-		config.setTestOnBorrow(true);
-		pool = new JedisPool(config, HOST, PORT, 100000);
+		pool = RedisPool.getJedisPool();
+		prop = RedisPool.getProp();
 	}
 
 	/**
@@ -71,7 +56,6 @@ public final class RedisUtils {
 		if (pool != null) {
 			pool.destroy();
 		}
-		config = null;
 	}
 
 	/**
@@ -452,6 +436,17 @@ public final class RedisUtils {
 	}
 	
 	public static void main(String[] args) {
+//		Map<String,String> m = RedisUtils.findKeyValuesMapByTable("BUSINESS_DETAIL",0,"\t",0,1,2);
+		Map<String,String> m = RedisUtils.findKeyValuesMapByTable("URLHOTACTION",0,",",1);
+		for(String s:m.keySet()){
+//			if(s.startsWith("1"))
+			System.out.println(s+"-->"+m.get(s));
+		}
 		
+		m = RedisUtils.findKeyValuesMapByTable("BUSINESS_DETAIL",0,"\t",0,1,2);
+		for(String s:m.keySet()){
+//			if(s.startsWith("1"))
+			System.out.println(s+"-->"+m.get(s));
+		}
 	}
 }

@@ -27,10 +27,6 @@ public class OrderModelDriver extends Configured implements Tool{
 		fs.delete(new Path(args[2]), true);
 		
 		Configuration conf = getConf();
-		if (args.length > 4) {
-			conf.set("mapred.job.queue.name", args[3]);
-			conf.set("mapred.max.split.size", args[4]);
-		}
 		
 		Job job = new Job(conf);
 		job.setJarByClass(OrderModelDriver.class);
