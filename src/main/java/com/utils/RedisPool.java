@@ -29,6 +29,10 @@ public class RedisPool {
 		pool = new JedisPool(config, host, port, timeout);
 	}
 	
+	private RedisPool() {
+		
+	}
+	
 	public static JedisPool getJedisPool() {
 		return pool;
 	}
