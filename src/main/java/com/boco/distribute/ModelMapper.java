@@ -6,14 +6,14 @@ import java.util.Properties;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import com.boco.global.GlobalTools;
+import com.utils.ConfigUtils;
 
 public class ModelMapper extends Mapper<Object, Text, Text, Text>{
 	
 	Text tk = new Text();
 	Text tv = new Text();
 	
-	public static Properties prop = GlobalTools.getProp("hour/TwSeHostOrderD.properties");
+	public static Properties prop = ConfigUtils.getConfig("hour/TwSeHostOrderD.properties");
 	
 	@Override
 	public void map(Object key, Text value, Context context)

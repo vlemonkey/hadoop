@@ -1,13 +1,5 @@
 package com.boco.global;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Properties;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.compress.CompressionCodec;
@@ -17,43 +9,7 @@ import org.apache.hadoop.mapreduce.lib.input.SequenceFileAsTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
-import com.utils.ConfigUtils;
-
 public class GlobalTools {
-	
-	/**
-	 * 递归取得配置文件的properties
-	 * @param filePath 文件路径
-	 * @return
-	 */
-	public static Properties getProp(String fileName) {
-		Properties prop = getDistributedCahceProp(fileName);
-		return null != prop ? prop : ConfigUtils.getConfig(fileName);
-	}
-	
-	/**
-	 * 递归取得配置文件的properties
-	 * 用于HDFS DistributedCache
-	 * @param fileName 文件名
-	 * @param dirName 文件夹路径
-	 * @return
-	 */
-	public static Properties getDistributedCahceProp(String filePath) {
-		String fileName = StringUtils.substringAfterLast(filePath, File.separator);
-		File file = new File("config");
-		Collection<File> collection2 = FileUtils.listFiles(file, 
-				FileFilterUtils.nameFileFilter(fileName), TrueFileFilter.INSTANCE);
-		if (collection2.size() == 1) {
-			return ConfigUtils.getConfig(collection2.iterator().next());
-		}else {
-			for (File f : collection2) {
-				if (StringUtils.endsWith(f.getAbsolutePath(), filePath)) {
-					return ConfigUtils.getConfig(f);
-				}
-			}
-			return null;
-		}
-	}
 	
 	/**
 	 * 设置数据稽查参数
