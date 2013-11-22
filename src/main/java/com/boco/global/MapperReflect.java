@@ -36,7 +36,7 @@ public class MapperReflect {
 																		// Map集合
 	private static Map<String, Method> classMap = new HashMap<String, Method>(); // 反射类方法集合
 	private static Map<String, Method> verifyClassMap = new HashMap<String, Method>(); // 验证反射类方法集合
-	private static Param param;
+	private static Param param = null;
 
 	private static String[] fields; // 输出数组
 	// 验证字段可能为空 可能为null
@@ -46,34 +46,59 @@ public class MapperReflect {
 
 	// 构造函数
 	public MapperReflect(String propPath) {
-		prop = ConfigUtils.getConfig(propPath);
-		delimiterIn = Pattern.compile(prop.getProperty("DELIMITER_IN", ","));
-		DELIMITER_OUT = prop.getProperty("DELIMITER_OUT", ",");
-		splitOut = Pattern.compile(DELIMITER_OUT);
+		init(propPath);
 	}
 	
 	// 构造函数
-	public MapperReflect(Properties properties) {
+	public MapperReflect(String propPath, boolean excuteSetup) {
+		init(propPath);
+		setup();
+	}
+	
+	// 构造函数
+	public MapperReflect(String propPath, MultipleOutputs<NullWritable, Text> mos) {
+		init(propPath);
+		setup(mos);
+	}
+	
+	
+	/**
+	 * 初始化各参数
+	 * @param propPath
+	 */
+	private void init(String propPath) {
+		initByProperties(ConfigUtils.getConfig(propPath));
+	}
+	
+	
+	/**
+	 * 根据prop初始化各参数
+	 * @param properties
+	 */
+	private void initByProperties(Properties properties) {
 		prop = properties;
 		delimiterIn = Pattern.compile(prop.getProperty("DELIMITER_IN", ","));
 		DELIMITER_OUT = prop.getProperty("DELIMITER_OUT", ",");
 		splitOut = Pattern.compile(DELIMITER_OUT);
 	}
-
-	/**
-	 * 初始化调用
-	 */
-	public void setup() {
-		initAll();
-		param = new Param(redisMaps); // 初始化参数类
-	}
+	
 
 	/**
 	 * 初始化调用
 	 * 
 	 * @param mos
 	 */
-	public void setup(MultipleOutputs<NullWritable, Text> mos) {
+	private void setup() {
+		initAll();
+		param = new Param(redisMaps);
+	}
+	
+	/**
+	 * 初始化调用
+	 * 
+	 * @param mos
+	 */
+	private void setup(MultipleOutputs<NullWritable, Text> mos) {
 		initAll();
 		param = new Param(redisMaps, mos); // 初始化参数类
 	}
@@ -291,6 +316,10 @@ public class MapperReflect {
 
 	public String getProperty(String key, String defaultValue) {
 		return prop.getProperty(key, defaultValue);
+	}
+	
+	public boolean isNotInitParamObject() {
+		return param == null;
 	}
 
 	public static void main(String[] args) {
