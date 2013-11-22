@@ -1,7 +1,32 @@
 开发规范
 
-1.可以公用的变量，声明成 public static, 并且在setup方法外面  例如
+1.可以公用的变量，声明成 private static, 并且在setup方法外面  例如
 private static Map<String, String> redisMap = RedisUtils.findCode2CodeIDMap("tableName");
+
+2.获取配置文件方法 
+ConfigUtils.getConfig(propPath);
+此方法是先通过hdfs的distributedcache获取
+如果返回null，则读取本地/config下的配置文件
+
+3.properties配置文件的写法
+config/global.properties 设置了全局的公用变量
+例如:redis的host和redis的port；mysql的host，mysql的port等
+# REDIS 
+REDIS.HOST=10.0.7.239
+REDIS.PORT=6379
+
+#mysql
+MYSQL.HOST=10.0.7.216
+MYSQL.PORT=3306
+建议全局变量统一写在global.properties里面
+
+使用：
+在某个配置文件中使用时，如jdbc.properties中使用，使用如下方法配置
+#mysql
+mysql.driverClassName=com.mysql.jdbc.Driver
+mysql.url=jdbc:mysql://${MYSQL.HOST}:${MYSQL.PORT}/test
+mysql.username=hive
+mysql.password=hive
 
 
 
