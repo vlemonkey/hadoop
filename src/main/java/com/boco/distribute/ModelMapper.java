@@ -13,7 +13,7 @@ public class ModelMapper extends Mapper<Object, Text, Text, Text>{
 	Text tk = new Text();
 	Text tv = new Text();
 	
-	public static Properties prop = GlobalTools.getProp("TwSeHostOrderD.properties", "hour");
+	public static Properties prop = GlobalTools.getProp("hour/TwSeHostOrderD.properties");
 	
 	@Override
 	public void map(Object key, Text value, Context context)
