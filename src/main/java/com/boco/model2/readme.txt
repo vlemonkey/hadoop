@@ -9,7 +9,9 @@ ConfigUtils.getConfig(propPath);
 如果返回null，则读取本地/config下的配置文件
 
 3.properties配置文件的写法
-config/global.properties 设置了全局的公用变量
+config/global.properties 设置了采用哪个全局配置文件
+develop.properties表示开发环境时才用的全局配置文件
+product.properties标识生产环境下用的全局配置文件
 例如:redis的host和redis的port；mysql的host，mysql的port等
 # REDIS 
 REDIS.HOST=10.0.7.239
@@ -18,7 +20,7 @@ REDIS.PORT=6379
 #mysql
 MYSQL.HOST=10.0.7.216
 MYSQL.PORT=3306
-建议全局变量统一写在global.properties里面
+建议全局变量统一写在相应的.properties里面--两份
 
 使用：
 在某个配置文件中使用时，如jdbc.properties中使用，使用如下方法配置
