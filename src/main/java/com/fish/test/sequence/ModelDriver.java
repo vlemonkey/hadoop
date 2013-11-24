@@ -23,7 +23,8 @@ public class ModelDriver extends Configured implements Tool{
 		// 初始化job 不包括inputformat
 		// getclass 当前类，用来设置job.setJarByClass()、job.setJobName()
 		// outputformat sequencefile
-		Job job = GlobalTools.initJobWithoutInput(getConf(), getClass());
+		Job job = GlobalTools.initJob(getConf(), getClass());
+		GlobalTools.setSequenceOutput(job);
 		
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));

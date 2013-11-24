@@ -13,7 +13,6 @@ public class RedisPool {
 	public static Properties prop = ConfigUtils.getConfig(CONFIG_PATH);
 
 	static {
-		System.out.println("1");
 		String host = prop.getProperty("REDIS.HOST");
 		int port = Integer.parseInt(prop.getProperty("REDIS.PORT"));
 		int maxActive = Integer.parseInt(prop.getProperty("REDIS.MAXACTIVE", "20"));
@@ -30,7 +29,6 @@ public class RedisPool {
 	}
 	
 	private RedisPool() {
-		
 	}
 	
 	public static JedisPool getJedisPool() {

@@ -31,7 +31,8 @@ public class ModelDriver extends Configured implements Tool{
 		DistributedCache.createSymlink(conf);
 		DistributedCache.addCacheArchive(new URI("hadoop/distributedcache/config#config"), conf);
 		
-		Job job = GlobalTools.initJobWithoutInput(conf, getClass());
+		Job job = GlobalTools.initJob(conf, getClass());
+		GlobalTools.setSequenceOutput(job);
 		GlobalTools.setDataExaminer(job, args[0]);
 		
 		FileInputFormat.setInputPaths(job, new Path(args[1]));

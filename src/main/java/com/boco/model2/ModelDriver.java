@@ -21,8 +21,9 @@ public class ModelDriver extends Configured implements Tool{
 		FileSystem fs = FileSystem.get(getConf());
 		fs.delete(new Path(args[2]), true);
 		
-		Job job = GlobalTools.initJobWithoutInput(getConf(), getClass());
+		Job job = GlobalTools.initJob(getConf(), getClass());
 		GlobalTools.setDataExaminer(job, args[0]);
+		GlobalTools.setSequenceOutput(job);
 		
 		FileInputFormat.setInputPaths(job, new Path(args[1]));
 		FileOutputFormat.setOutputPath(job, new Path(args[2]));

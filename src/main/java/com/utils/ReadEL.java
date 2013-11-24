@@ -51,14 +51,6 @@ public class ReadEL {
 	}
 	
 	public static void main(String[] args) {
-		Properties prop = ConfigUtils.getConfig("/config/test.properties");
-		System.out.println(prop.getProperty("name"));
-		System.out.println(prop.getProperty("age"));
-		System.out.println(prop.getProperty("r"));
-		System.out.println("---------------------------");
-		replaceProp(prop);
-		System.out.println(prop.getProperty("name"));
-		System.out.println(prop.getProperty("age"));
-		System.out.println(prop.getProperty("r"));
+		
 	}
 }
