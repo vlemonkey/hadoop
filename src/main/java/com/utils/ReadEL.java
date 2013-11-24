@@ -10,7 +10,7 @@ import com.utils.ConfigUtils;
 
 public class ReadEL {
 	public static Pattern EL_PATTERN = Pattern.compile("\\$\\{(.*?)\\}", Pattern.DOTALL);
-	public static Properties GLOBAL_PROP = ConfigUtils.getConfig("/config/global.properties");
+	public static Properties GLOBAL_PROP = ConfigUtils.getGlobalProperites();
 	
 	
 	/**

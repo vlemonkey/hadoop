@@ -16,13 +16,25 @@ import org.apache.commons.lang.StringUtils;
 
 public class ConfigUtils {
 	
+	private static final String GLOBAL_PROP = "/config/global.properties";
+	private static final String DISTRIBUTEDCAHCHE_CONFIG = "config";
+	
+	/**
+	 * 获取global配置文件别名路径
+	 * 对应的properties
+	 * @return
+	 */
+	public static Properties getGlobalProperites() {
+		return getConfig(getConfig(GLOBAL_PROP).getProperty("alias"));
+	}
+	
 	/**
 	 * 递归取得配置文件的properties
 	 * @param filePath 文件路径
 	 * @return
 	 */
-	public static Properties getConfig(String fileName, String... alias) {
-		File file = getDistributedCahceProp(fileName, alias);
+	public static Properties getConfig(String fileName) {
+		File file = getDistributedCahceProp(fileName);
 		InputStream inputStream = null;
 		Properties prop = new Properties();
 		try {
@@ -47,16 +59,10 @@ public class ConfigUtils {
 	 * @param dirName 文件夹路径
 	 * @return
 	 */
-	public static File getDistributedCahceProp(String filePath, String... alias) {
+	public static File getDistributedCahceProp(String filePath) {
 		String fileName = StringUtils.substringAfterLast(filePath, File.separator);
-		File file = null;
-		if (alias.length == 0) {
-			file = new File("config"); // config--HDFS distributedcache默认配置文件名
-		}else {
-			file = new File(alias[0]); // HDFS distributedcache配置文件名
-		}
-		
-		if (!file.exists()) { // 如果HDFS上不存在 则返回null
+		File file = new File(DISTRIBUTEDCAHCHE_CONFIG); // config--HDFS distributedcache默认配置文件名
+		if (!file.exists()) {
 			return null;
 		}
 		
@@ -77,24 +83,5 @@ public class ConfigUtils {
 	public static void main(String[] args) {
 		Properties prop = ConfigUtils.getConfig("/config/reflect.properties");
 		System.out.println(prop.getProperty("B.VERIFYCLASS"));
-		prop.setProperty("B.VERIFYCLASS", "abc");
-		System.out.println(prop.getProperty("B.VERIFYCLASS"));
-		
-		prop.put("a", "b");
-		System.out.println(prop.get("a"));
-		System.out.println(prop.getProperty("a"));
-		
-		
-		
-		
-		
-		
-		
-		
-//		Set<Entry<Object, Object>> set = prop.entrySet();
-//		for (Entry<Object, Object> entry : set) {
-//			System.out.println(entry.getKey() + "\t" + entry.getValue());
-//		}
-		
 	}
 }
