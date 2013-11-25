@@ -221,7 +221,7 @@ public class MapperReflect {
 			redisMaps = new HashMap<String, Map<String, String>>();
 			String[] strs = Constants.configSplit.split(strRedisMaps);
 			for (String tableName : strs) {
-				redisMaps.put(tableName, RedisUtils.findCode2CodeIDMap(tableName));
+				redisMaps.put(tableName, RedisUtils.findTableMap(tableName));
 			}
 		}
 	}

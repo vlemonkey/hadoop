@@ -175,7 +175,7 @@ public class ETLReflect {
 		if (isNotBlank(strRedisMaps)) {
 			String[] strs = split.split(strRedisMaps);
 			for (String tableName : strs) {
-				redisMaps.put(tableName, RedisUtils.findCode2CodeIDMap(tableName));
+				redisMaps.put(tableName, RedisUtils.findTableMap(tableName));
 			}
 		}
 	}

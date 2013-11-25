@@ -18,7 +18,7 @@ import com.boco.global.Constants;
 
 public class RedisInit {
 	
-	private static String ALIAS = ".REDIS_ALIAS";
+	private static String ALIAS = ".ALIAS";
 	private static String COLUMNS = ".COLUMNS";
 	private static String KEY = ".KEY";
 	private static String VALUE = ".VALUE";
@@ -49,14 +49,13 @@ public class RedisInit {
 	private static void initTable(String tableName) {
 		File file = new File(getFilePath(tableName));
 		if (file.exists()) {
-			String redisTableName = getAlias(tableName);
-			System.out.printf("import tableName:%s\n", redisTableName);
+			System.out.printf("import tableName:%s\n", tableName);
 
 			int count = 0; // 计数
 			j = pool.getResource();
 			// 如果表已经存在 则删除，重新导入
-			if (j.exists(redisTableName)) {
-				j.del(redisTableName);
+			if (j.exists(tableName)) {
+				j.del(tableName);
 			}
 
 			BufferedReader reader = null;
@@ -73,7 +72,7 @@ public class RedisInit {
 				reader = new BufferedReader(new FileReader(file));
 				while (null != (strTemp = reader.readLine())) {
 					CSV_DATAS = splitPattern.split(strTemp);
-					pipe.hset(redisTableName, getDatas(CSV_DATAS, keyIndex),
+					pipe.hset(tableName, getDatas(CSV_DATAS, keyIndex),
 							getDatas(CSV_DATAS, valueIndex, delimiter));
 					count++;
 				}
@@ -118,12 +117,7 @@ public class RedisInit {
 	 */
 	private static int[] getKeyIndex(Map<String, Integer> indexMap, String tableName) {
 		String[] keys = splitPattern.split(getKey(tableName));
-		int[] keyIndexes = new int[keys.length];
-		for (int i=0, n=keys.length; i<n; i++) {
-			keyIndexes[i] = indexMap.get(keys[i]);
-		}
-		keys = null;
-		return keyIndexes;
+		return getCustIndex(indexMap, keys);
 	}
 	
 	/**
@@ -134,12 +128,25 @@ public class RedisInit {
 	 */
 	private static int[] getValueIndex(Map<String, Integer> indexMap, String tableName) {
 		String[] values = splitPattern.split(getValue(tableName));
-		int[] valueIndexes = new int[values.length];
-		for (int i=0, n=values.length; i<n; i++) {
-			valueIndexes[i] = indexMap.get(values[i]);
+		return getCustIndex(indexMap, values);
+	}
+	
+	/**
+	 * 获取自定义字段的索引
+	 * @param indexMap
+	 * @param columns
+	 * @return
+	 */
+	private static int[] getCustIndex(Map<String, Integer> indexMap, String... columns) {
+		if (columns.length == 0) {
+			return null;
 		}
-		values = null;
-		return valueIndexes;
+		
+		int[] indexes = new int[columns.length];
+		for (int i=0, n=columns.length; i<n; i++) {
+			indexes[i] = indexMap.get(columns[i]);
+		}
+		return indexes;
 	}
 
 	// 获取该tablename中所有的列索引
@@ -174,11 +181,24 @@ public class RedisInit {
 
 	// 根据tableName返回数据文件全路径
 	private static String getFilePath(String tableName) {
-		return StringTools.append(filesPath, "/", tableName, ".",filesTailName);
+		return StringTools.append(filesPath, "/", getAlias(tableName), ".",filesTailName);
+	}
+	
+	/**
+	 * 关闭rediss连接
+	 */
+	public static void closeRedis() {
+		if (j != null) {
+			j.disconnect();
+		}
+		if (pool != null) {
+			pool.destroy();
+		}
 	}
 
 	// 初始化数据
 	public static void main(String[] args) {
 		initAll();
+		closeRedis();
 	}
 }
