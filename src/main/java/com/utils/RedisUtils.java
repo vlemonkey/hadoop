@@ -24,13 +24,13 @@ public final class RedisUtils {
 	private static final String KEY_VALUE = ".KEY_VALUE";
 
 	private static Jedis j = null;
-	private static Properties prop;
+	private static Properties prop = null;
 	private static JedisPool pool = null; // Jedis客户端池
 	private final static Pattern p = Pattern.compile(","); // 逗号分割
 
 	static {
 		pool = RedisPool.getJedisPool();
-		prop = RedisPool.getProp();
+		prop = ConfigUtils.getConfig("/config/redis_meta_data.properties");
 	}
 
 	/**

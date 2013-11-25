@@ -2,12 +2,13 @@ package com.utils;
 
 import java.util.Properties;
 
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 public class RedisPool {
 	
-	private static final String CONFIG_PATH = "/config/redis_meta_data.properties";
+	private static final String CONFIG_PATH = "/config/jdbc.properties";
 
 	public static JedisPool pool = null; // Jedis客户端池
 	public static Properties prop = ConfigUtils.getConfig(CONFIG_PATH);
@@ -40,6 +41,12 @@ public class RedisPool {
 	}
 	
 	public static void main(String[] args) {
-
+		JedisPool pool = getJedisPool();
+		Jedis j = pool.getResource();
+		j.set("a", "c");
+		System.out.println(j.get("a"));
+		j.del("a");
+		System.out.println(j.get("a"));
+		pool.returnResource(j);
 	}
 }
