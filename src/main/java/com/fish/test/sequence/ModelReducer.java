@@ -2,6 +2,7 @@ package com.fish.test.sequence;
 
 import java.io.IOException;
 
+import org.apache.commons.io.output.NullWriter;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -23,6 +24,9 @@ public class ModelReducer extends Reducer<NullWritable, Text, NullWritable, Text
 		for (Text text : values) {
 //			mos.write(key, text, "abc/");
 			context.write(key, text);
+			mos.write(NullWritable.get(), text, "a/");
+			mos.write(NullWritable.get(), text, "b/");
+			mos.write(NullWritable.get(), text, "c/");
 		}
 	}
 	

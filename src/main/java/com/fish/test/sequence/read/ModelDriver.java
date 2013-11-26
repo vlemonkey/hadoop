@@ -23,8 +23,6 @@ public class ModelDriver extends Configured implements Tool{
 		FileSystem fs = FileSystem.get(getConf());
 		fs.delete(new Path(args[1]), true);
 		
-		getConf().set("mapred.max.split.size", args[3]);
-		
 		Job job = new Job(getConf());
 		job.setJarByClass(ModelDriver.class);
 		job.setJobName(getClass().getName());
@@ -42,7 +40,6 @@ public class ModelDriver extends Configured implements Tool{
 		job.setOutputKeyClass(NullWriter.class);
 		job.setOutputValueClass(Text.class);
 	
-//		job.setOutputFormatClass(SequenceFileOutputFormat.class);
 		job.setInputFormatClass(SequenceFileAsTextInputFormat.class);
 		
 		MultipleOutputs.addNamedOutput(job, "text", TextOutputFormat.class, NullWritable.class, Text.class);
