@@ -1,13 +1,18 @@
 package com.boco.global;
 
+import java.net.URI;
+import java.util.Properties;
+
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.io.SequenceFile.CompressionType;
-import org.apache.hadoop.io.compress.GzipCodec;
+import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+
+import com.utils.ConfigUtils;
 
 public class GlobalTools {
 	
@@ -20,6 +25,11 @@ public class GlobalTools {
 	 */
 	public static Job initJob(Configuration conf, Class<?> cls) 
 		throws Exception{
+		//建立一个软连接
+		DistributedCache.createSymlink(conf);
+		DistributedCache.addCacheArchive(new URI(Constants.DISTRIBUTEDCACHE_PATH.concat("#config")), conf);
+		
+		// 声明job
 		Job job = new Job(conf);
 		job.setJarByClass(cls);
 		job.setJobName(cls.getName());
@@ -65,11 +75,20 @@ public class GlobalTools {
 	 * 只有output
 	 * @param job
 	 */
+	@SuppressWarnings("unchecked")
 	public static void setSequenceOutput(Job job) {
+		Properties gp = ConfigUtils.getGlobalProperites();
+		Class<? extends CompressionCodec> compressClass = null;
+		try {
+			compressClass = ((Class<? extends CompressionCodec>) Class.forName(gp.getProperty("SEQUENCE.COMPRESS.CLASS")));
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		job.setOutputFormatClass(SequenceFileOutputFormat.class);
 		SequenceFileOutputFormat.setCompressOutput(job, true);
-		SequenceFileOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
+		SequenceFileOutputFormat.setOutputCompressorClass(job, compressClass);
 		SequenceFileOutputFormat.setOutputCompressionType(job, CompressionType.BLOCK);
-		LazyOutputFormat.setOutputFormatClass(job, SequenceFileOutputFormat.class);
+		gp = null;
+//		LazyOutputFormat.setOutputFormatClass(job, SequenceFileOutputFormat.class);
 	}
 }

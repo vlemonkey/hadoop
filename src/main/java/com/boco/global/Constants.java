@@ -10,8 +10,6 @@ public class Constants {
 	public static final String FKID = "FKID";  // 数据稽查外键
 	public static final String COST_TIME = "COST_TIME"; // 耗时
 	
-	// 容量调度器名称
-	public static final String QUEUE_DEFAULT = "default";
-	public static final String QUEUE_MIA = "mia";
-	public static final String QUEUE_WY = "wy";
+	// config配置文件在distributedcache上hdfs路径
+	public static final String DISTRIBUTEDCACHE_PATH = "hadoop/distributedcache/config";
 }
