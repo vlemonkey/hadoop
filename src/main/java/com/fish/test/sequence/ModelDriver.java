@@ -38,6 +38,7 @@ public class ModelDriver extends Configured implements Tool{
 		job.setOutputValueClass(Text.class);
 		
 		boolean success = job.waitForCompletion(true);
+//		boolean success = false;
 		return success ? 0 : 1;
 	}
 	

@@ -1,7 +1,6 @@
 package com.boco.global;
 
 import java.net.URI;
-import java.util.Properties;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.filecache.DistributedCache;
@@ -77,10 +76,11 @@ public class GlobalTools {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void setSequenceOutput(Job job) {
-		Properties gp = ConfigUtils.getGlobalProperites();
 		Class<? extends CompressionCodec> compressClass = null;
+		System.out.printf("配置文件 压缩方式：%s\n", ConfigUtils.GLOBAL_PROPERTIES.getProperty("SEQUENCE.COMPRESS.CLASS"));
 		try {
-			compressClass = ((Class<? extends CompressionCodec>) Class.forName(gp.getProperty("SEQUENCE.COMPRESS.CLASS")));
+			compressClass = ((Class<? extends CompressionCodec>) 
+					Class.forName(ConfigUtils.GLOBAL_PROPERTIES.getProperty("SEQUENCE.COMPRESS.CLASS")));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -88,7 +88,6 @@ public class GlobalTools {
 		SequenceFileOutputFormat.setCompressOutput(job, true);
 		SequenceFileOutputFormat.setOutputCompressorClass(job, compressClass);
 		SequenceFileOutputFormat.setOutputCompressionType(job, CompressionType.BLOCK);
-		gp = null;
 //		LazyOutputFormat.setOutputFormatClass(job, SequenceFileOutputFormat.class);
 	}
 }

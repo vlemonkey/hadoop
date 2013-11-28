@@ -16,6 +16,9 @@ import org.apache.commons.lang.StringUtils;
 
 public class ConfigUtils {
 	
+	public static final Properties GLOBAL_PROPERTIES = getGlobalProperites();
+	public static File file = null;
+
 	private static final String GLOBAL_PROP = "/config/global.properties";
 	private static final String DISTRIBUTEDCAHCHE_CONFIG = "config";
 	
@@ -60,12 +63,17 @@ public class ConfigUtils {
 	 * @return
 	 */
 	public static File getDistributedCahceProp(String filePath) {
-		String fileName = StringUtils.substringAfterLast(filePath, File.separator);
-		File file = new File(DISTRIBUTEDCAHCHE_CONFIG); // config--HDFS distributedcache默认配置文件名
-		if (!file.exists()) {
-			return null;
+		if (null == file || !file.exists()) {
+			file = new File(DISTRIBUTEDCAHCHE_CONFIG); // config--HDFS distributedcache默认配置文件名
 		}
+
+		return file.exists() ? getDistFile(file, filePath) : null;
 		
+	}
+	
+	// 根据配置文件名称获取配置文件file
+	private static File getDistFile(File distFile, String filePath) {
+		String fileName = StringUtils.substringAfterLast(filePath, File.separator);
 		Collection<File> fileCollections = FileUtils.listFiles(file, 
 				FileFilterUtils.nameFileFilter(fileName), TrueFileFilter.INSTANCE);
 		if (fileCollections.size() == 1) { // properties文件不重名，直接返回prop

@@ -10,8 +10,6 @@ import com.utils.ConfigUtils;
 
 public class ReadEL {
 	public static Pattern EL_PATTERN = Pattern.compile("\\$\\{(.*?)\\}", Pattern.DOTALL);
-	public static Properties GLOBAL_PROP = ConfigUtils.getGlobalProperites();
-	
 	
 	/**
 	 * 替换prop里面所有的全局变量
@@ -38,7 +36,7 @@ public class ReadEL {
 		Matcher matcher = EL_PATTERN.matcher(tempValue);
 		String temp = null;
 		while (matcher.find()) {
-			temp = GLOBAL_PROP.getProperty(matcher.group(1));
+			temp = ConfigUtils.GLOBAL_PROPERTIES.getProperty(matcher.group(1));
 			if (null != temp) {
 				tempValue = tempValue.replace(matcher.group(), temp);
 			}else {

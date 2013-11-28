@@ -30,7 +30,7 @@ public class ModelMapper extends Mapper<Object, Text, NullWritable, Text>{
 	
 	@Override
 	public void setup(Context context) throws IOException, InterruptedException{
-
+		
 	}
 	
 	@Override

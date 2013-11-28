@@ -24,8 +24,8 @@ public class ModelReducer extends Reducer<NullWritable, Text, NullWritable, Text
 //			mos.write(key, text, "abc/");
 			context.write(key, text);
 			mos.write(NullWritable.get(), text, "a/");
-			mos.write(NullWritable.get(), text, "b/");
-			mos.write(NullWritable.get(), text, "c/");
+//			mos.write(NullWritable.get(), text, "b/");
+//			mos.write(NullWritable.get(), text, "c/");
 		}
 	}
 	
