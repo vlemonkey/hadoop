@@ -3,15 +3,16 @@ package com.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
 
 import com.boco.global.Constants;
@@ -24,7 +25,6 @@ public class RedisInit {
 	private static String VALUE = ".VALUE";
 	
 	private static String CONFIG_PATH = "/config/redis_meta_data.properties";
-	private static JedisPool pool = null; // Jedis客户端池
 	private static Properties prop;
 	private static Pattern splitPattern;
 	private static String delimiter;
@@ -34,15 +34,35 @@ public class RedisInit {
 	private static String filesPath; // 数据文件路径
 	private static String filesTailName; // 数据文件类型
 
-	static {
-		pool = RedisPool.getJedisPool();
+	
+	// 初始化redis
+	private static void init(String... args) {
 		prop = ConfigUtils.getConfig(CONFIG_PATH);
 		splitPattern = Constants.configSplit;
 		delimiter = prop.getProperty("DILIMITER", ",");
 
 		filesPath = prop.getProperty("INIT_DATA_PATH");
+		filesPath = prop.getProperty("INIT_DATA_PATH");
 		filesTailName = prop.getProperty("INIT_FILE_TAIL_NAME");
 		INIT_TABLES = splitPattern.split(prop.getProperty("REDIS_INIT_TABLES"));
+		
+		Properties redisProp = ConfigUtils.getConfig("/config/jdbc.properties");
+		String host = redisProp.getProperty("REDIS.HOST");
+		int port = Integer.parseInt(redisProp.getProperty("REDIS.PORT")),
+			timeout = Integer.parseInt(redisProp.getProperty("REDIS.TIMEOUT"));
+		switch(args.length) {
+			case 4:
+				timeout = Integer.parseInt(args[3]);
+			case 3:
+				port = Integer.parseInt(args[2]);
+			case 2:
+				host = args[1];
+			case 1:
+				filesPath = args[0];
+			default:
+				break;
+		}
+		j = new Jedis(host, port, timeout);
 	}
 
 	// 初始化一个表的数据
@@ -52,7 +72,6 @@ public class RedisInit {
 			System.out.printf("import tableName:%s\n", tableName);
 
 			int count = 0; // 计数
-			j = pool.getResource();
 			// 如果表已经存在 则删除，重新导入
 			if (j.exists(tableName)) {
 				j.del(tableName);
@@ -79,13 +98,14 @@ public class RedisInit {
 				pipe.sync();
 			} catch (Exception e) {
 				System.err.printf("read file error:%s\n", getFilePath(tableName));
+				printGenericCommandUsage(System.out);
 				e.printStackTrace();
 			} finally {
-				pool.returnResource(j);
 				System.out.printf("total:%d\ncost:%d\n\n", count, System.currentTimeMillis() - l);
 			}
 		}else {
 			System.err.printf("error path:%s\n", getFilePath(tableName));
+			printGenericCommandUsage(System.out);
 		}
 	}
 	
@@ -184,21 +204,28 @@ public class RedisInit {
 		return StringTools.append(filesPath, "/", getAlias(tableName), ".",filesTailName);
 	}
 	
-	/**
-	 * 关闭rediss连接
-	 */
-	public static void closeRedis() {
-		if (j != null) {
-			j.disconnect();
-		}
-		if (pool != null) {
-			pool.destroy();
-		}
-	}
-
+	// 输出提示信息
+	private static void printGenericCommandUsage(PrintStream out) {
+		out.println("\n--------------------------------------------");
+	    out.println("Generic command supported are\n");
+	    out.println("hadoop jar xxx.jar com.utils.RedisInit");
+	    out.println("hadoop jar xxx.jar com.utils.RedisInit /home/boco/INI");
+	    out.println("hadoop jar xxx.jar com.utils.RedisInit /home/boco/INI 10.0.7.215");
+	    out.println("hadoop jar xxx.jar com.utils.RedisInit /home/boco/INI 10.0.7.215 6379");
+	    out.println("hadoop jar xxx.jar com.utils.RedisInit /home/boco/INI 10.0.7.215 6379 60000\n");
+	    out.println("args[0]	cvs file folder");
+	    out.println("args[1]	redis host IP");
+	    out.println("args[2]	redis port");
+	    out.println("args[3]	redis timeout");
+	    out.println("--------------------------------------------\n");
+	    IOUtils.closeQuietly(out);
+	  }
+	
 	// 初始化数据
+	// 
 	public static void main(String[] args) {
+		init(args);
 		initAll();
-		closeRedis();
+		j = null;
 	}
 }
