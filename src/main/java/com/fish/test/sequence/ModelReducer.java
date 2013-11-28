@@ -2,7 +2,6 @@ package com.fish.test.sequence;
 
 import java.io.IOException;
 
-import org.apache.commons.io.output.NullWriter;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
