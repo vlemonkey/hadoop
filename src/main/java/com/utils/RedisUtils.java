@@ -59,7 +59,7 @@ public final class RedisUtils {
 		Map<String, String> resultMap = new HashMap<String, String>();
 		String[] strTemps = null;
 		for(Entry<String, String> entry : dataMap.entrySet()) {
-			strTemps = valueSplit.split(entry.getValue());
+			strTemps = valueSplit.split(entry.getValue(), -1);
 			resultMap.put(entry.getKey(), getDatas(strTemps, valueIndex, prop.getProperty("DILIMITER")));
 		}
 		
@@ -79,7 +79,7 @@ public final class RedisUtils {
 		Map<String, String> resultMap = new HashMap<String, String>();
 		String[] strTemps = null;
 		for(Entry<String, String> entry : dataMap.entrySet()) {
-			strTemps = valueSplit.split(entry.getValue());
+			strTemps = valueSplit.split(entry.getValue(), -1);
 			resultMap.put(entry.getKey(), getDatas(strTemps, valueIndex, prop.getProperty("DILIMITER")));
 		}
 		
@@ -138,7 +138,7 @@ public final class RedisUtils {
 	// 获取该tablename中所有的列索引
 	private static Map<String, Integer> getIndexMap(String tableName){
 		Map<String, Integer> indexMap = new HashMap<String, Integer>();
-		String[] cols = p.split(getValue(tableName));
+		String[] cols = p.split(getValue(tableName), -1);
 		for (int i=0, n=cols.length; i<n; i++) {
 			indexMap.put(cols[i], i);
 		}
@@ -150,7 +150,12 @@ public final class RedisUtils {
 		String d = delimiter.length == 0 ? "," : delimiter[0];
 		String[] datas = new String[index.length];
 		for (int i=0, n=index.length; i<n; i++) {
-			datas[i] = all[index[i]];
+			if (-1 != index[i]) {
+				datas[i] = all[index[i]];
+			}else {
+				datas[i] = StringUtils.EMPTY;
+			}
+			
 		}
 		
 		return StringUtils.join(datas, d);
@@ -169,7 +174,7 @@ public final class RedisUtils {
 		
 		int[] indexes = new int[columns.length];
 		for (int i=0, n=columns.length; i<n; i++) {
-			indexes[i] = indexMap.get(columns[i]);
+			indexes[i] = indexMap.get(columns[i]) != null ? indexMap.get(columns[i]) : -1;
 		}
 		return indexes;
 	}
@@ -214,19 +219,22 @@ public final class RedisUtils {
 	}
 	
 	public static void main(String[] args) {
-		Map<String, String> map = findTableMap("TEST");
-		System.out.println(map);
-		map = findTableMapByCustValue("TEST", "REGION_DESC", "PROVINCE_DESC");
-		System.out.println(map);
+		String tableName = "IMEI";
 		
-		addData("a", "b");
-		System.out.println(getData("a"));
-		del("a");
+		Map<String, String> map = findTableMap(tableName);
+		map = findTableMapByCustValue(tableName, "PRICE", null);
+		printMapTopN(map, 3);
 		
-		addHashData("TEST", "a", "b");
-		j = getJedis();
-		System.out.println(j.hdel("TEST", "a"));
-		returnJedis(j);
 		closeRedis();
+	}
+	
+	private static void printMapTopN(Map<String, String> map, int count) {
+		for (Entry<String, String> entry : map.entrySet()) {
+			if (count-- > 0) {
+				System.out.println(entry);
+			}else {
+				break;
+			}
+		}
 	}
 }

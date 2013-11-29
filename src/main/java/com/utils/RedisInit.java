@@ -44,7 +44,7 @@ public class RedisInit {
 		filesPath = prop.getProperty("INIT_DATA_PATH");
 		filesPath = prop.getProperty("INIT_DATA_PATH");
 		filesTailName = prop.getProperty("INIT_FILE_TAIL_NAME");
-		INIT_TABLES = splitPattern.split(prop.getProperty("REDIS_INIT_TABLES"));
+		INIT_TABLES = splitPattern.split(prop.getProperty("REDIS_INIT_TABLES"), -1);
 		
 		Properties redisProp = ConfigUtils.getConfig("/config/jdbc.properties");
 		String host = redisProp.getProperty("REDIS.HOST");
@@ -70,7 +70,7 @@ public class RedisInit {
 		File file = new File(getFilePath(tableName));
 		if (file.exists()) {
 			System.out.printf("import tableName:%s\n", tableName);
-
+			System.out.println(file.getAbsolutePath());
 			int count = 0; // 计数
 			// 如果表已经存在 则删除，重新导入
 			if (j.exists(tableName)) {
@@ -90,7 +90,7 @@ public class RedisInit {
 				Pipeline pipe = j.pipelined();
 				reader = new BufferedReader(new FileReader(file));
 				while (null != (strTemp = reader.readLine())) {
-					CSV_DATAS = splitPattern.split(strTemp);
+					CSV_DATAS = splitPattern.split(strTemp, -1);
 					pipe.hset(tableName, getDatas(CSV_DATAS, keyIndex),
 							getDatas(CSV_DATAS, valueIndex, delimiter));
 					count++;
@@ -136,7 +136,7 @@ public class RedisInit {
 	 * @return
 	 */
 	private static int[] getKeyIndex(Map<String, Integer> indexMap, String tableName) {
-		String[] keys = splitPattern.split(getKey(tableName));
+		String[] keys = splitPattern.split(getKey(tableName), -1);
 		return getCustIndex(indexMap, keys);
 	}
 	
@@ -147,7 +147,7 @@ public class RedisInit {
 	 * @return
 	 */
 	private static int[] getValueIndex(Map<String, Integer> indexMap, String tableName) {
-		String[] values = splitPattern.split(getValue(tableName));
+		String[] values = splitPattern.split(getValue(tableName), -1);
 		return getCustIndex(indexMap, values);
 	}
 	
@@ -172,7 +172,7 @@ public class RedisInit {
 	// 获取该tablename中所有的列索引
 	private static Map<String, Integer> getIndexMap(String tableName){
 		Map<String, Integer> indexMap = new HashMap<String, Integer>();
-		String[] cols = splitPattern.split(getColumns(tableName));
+		String[] cols = splitPattern.split(getColumns(tableName), -1);
 		for (int i=0, n=cols.length; i<n; i++) {
 			indexMap.put(cols[i], i);
 		}
