@@ -24,7 +24,6 @@ public class RedisInit {
 	private static String KEY = ".KEY";
 	private static String VALUE = ".VALUE";
 	
-	private static String CONFIG_PATH = "/config/redis_meta_data.properties";
 	private static Properties prop;
 	private static Pattern splitPattern;
 	private static String delimiter;
@@ -37,7 +36,7 @@ public class RedisInit {
 	
 	// 初始化redis
 	private static void init(String... args) {
-		prop = ConfigUtils.getConfig(CONFIG_PATH);
+		prop = ConfigUtils.getConfig(Constants.REDIS_PATH);
 		splitPattern = Constants.configSplit;
 		delimiter = prop.getProperty("DILIMITER", ",");
 

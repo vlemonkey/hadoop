@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import com.utils.ConfigUtils;
 
 public class ReadEL {
+	
 	public static Pattern EL_PATTERN = Pattern.compile("\\$\\{(.*?)\\}", Pattern.DOTALL);
 	
 	/**

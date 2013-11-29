@@ -2,16 +2,16 @@ package com.utils;
 
 import java.util.Properties;
 
+import com.boco.global.Constants;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 public class RedisPool {
 	
-	private static final String CONFIG_PATH = "/config/jdbc.properties";
-
 	public static JedisPool pool = null; // Jedis客户端池
-	public static Properties prop = ConfigUtils.getConfig(CONFIG_PATH);
+	public static Properties prop = ConfigUtils.getConfig(Constants.JDBC_PATH);
 
 	static {
 		String host = prop.getProperty("REDIS.HOST");

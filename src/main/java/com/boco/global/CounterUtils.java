@@ -15,14 +15,13 @@ import com.utils.JDBCUtils;
 
 public class CounterUtils {
 	
-	private static Properties prop = ConfigUtils.getConfig("/config/sql.properties");
-	
 	/**
 	 * 将counter信息保存到数据库中 
 	 * @param moduleName 自定义模块名称
 	 * @param job
 	 */
 	public static void insert2Mysql(String moduleName, Job job) {
+		Properties prop = ConfigUtils.getConfig(Constants.SQL_PATH);
 		String sql = prop.getProperty("INSERT_CHECK_DETAIL");
 		Counters counters = null;
 		try {

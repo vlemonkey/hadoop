@@ -14,21 +14,20 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang.StringUtils;
 
+import com.boco.global.Constants;
+
 public class ConfigUtils {
 	
 	public static final Properties GLOBAL_PROPERTIES = getGlobalProperites();
 	public static File file = null;
 
-	private static final String GLOBAL_PROP = "/config/global.properties";
-	private static final String DISTRIBUTEDCAHCHE_CONFIG = "config";
-	
 	/**
 	 * 获取global配置文件别名路径
 	 * 对应的properties
 	 * @return
 	 */
 	public static Properties getGlobalProperites() {
-		return getConfig(getConfig(GLOBAL_PROP).getProperty("alias"));
+		return getConfig(getConfig(Constants.GLOBAL_PROP).getProperty("alias"));
 	}
 	
 	/**
@@ -64,7 +63,7 @@ public class ConfigUtils {
 	 */
 	public static File getDistributedCahceProp(String filePath) {
 		if (null == file || !file.exists()) {
-			file = new File(DISTRIBUTEDCAHCHE_CONFIG); // config--HDFS distributedcache默认配置文件名
+			file = new File(Constants.DISTRIBUTEDCAHCHE_CONFIG); // config--HDFS distributedcache默认配置文件名
 		}
 
 		return file.exists() ? getDistFile(file, filePath) : null;

@@ -26,7 +26,7 @@ public class GlobalTools {
 		throws Exception{
 		//建立一个软连接
 		DistributedCache.createSymlink(conf);
-		DistributedCache.addCacheArchive(new URI(Constants.DISTRIBUTEDCACHE_PATH.concat("#config")), conf);
+		DistributedCache.addCacheArchive(new URI(Constants.DISTRIBUTEDCACHE_URI), conf);
 		
 		// 声明job
 		Job job = new Job(conf);

@@ -7,11 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import com.boco.global.Constants;
+
 
 public class JDBCUtils {
 
-	private static String CONFIG_PATH = "/config/jdbc.properties";
-	private static Properties prop = ConfigUtils.getConfig(CONFIG_PATH);
+	private static Properties prop = ConfigUtils.getConfig(Constants.JDBC_PATH);
 
 	private static String VAR = "#1.#2";
 	private static String PRE;

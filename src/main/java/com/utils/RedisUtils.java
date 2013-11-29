@@ -26,7 +26,7 @@ public final class RedisUtils {
 
 	static {
 		pool = RedisPool.getJedisPool();
-		prop = ConfigUtils.getConfig("/config/redis_meta_data.properties");
+		prop = ConfigUtils.getConfig(Constants.REDIS_PATH);
 		p = Constants.configSplit;
 		valueSplit = Pattern.compile(prop.getProperty("DILIMITER"));
 	}
