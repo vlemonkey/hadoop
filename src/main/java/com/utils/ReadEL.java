@@ -10,7 +10,8 @@ import com.utils.ConfigUtils;
 
 public class ReadEL {
 	
-	public static Pattern EL_PATTERN = Pattern.compile("\\$\\{(.*?)\\}", Pattern.DOTALL);
+	public static Pattern EL_PATTERN = Pattern.compile("\\$\\{(.*?)\\}");
+	public static Matcher matcher = EL_PATTERN.matcher("");
 	
 	/**
 	 * 替换prop里面所有的全局变量
@@ -33,8 +34,8 @@ public class ReadEL {
 			return null;
 		}
 		
-		String tempValue = String.valueOf(value);
-		Matcher matcher = EL_PATTERN.matcher(tempValue);
+		String tempValue = String.valueOf(value).toUpperCase();
+		matcher.reset(tempValue);
 		String temp = null;
 		while (matcher.find()) {
 			temp = ConfigUtils.GLOBAL_PROPERTIES.getProperty(matcher.group(1));
@@ -50,6 +51,10 @@ public class ReadEL {
 	}
 	
 	public static void main(String[] args) {
-		
+		Properties properties = ConfigUtils.getConfig("/config/test.properties");
+		replaceProp(properties);
+		System.out.printf("name:%s\n", properties.get("name"));
+		System.out.printf("age:%s\n", properties.get("age"));
+		System.out.printf("r:%s\n", properties.get("r"));
 	}
 }
