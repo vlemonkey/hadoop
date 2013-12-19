@@ -11,8 +11,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
-import com.utils.ConfigUtils;
-
 public class GlobalTools {
 	
 	/**
@@ -77,10 +75,8 @@ public class GlobalTools {
 	@SuppressWarnings("unchecked")
 	public static void setSequenceOutput(Job job) {
 		Class<? extends CompressionCodec> compressClass = null;
-		System.out.printf("配置文件 压缩方式：%s\n", ConfigUtils.GLOBAL_PROPERTIES.getProperty("SEQUENCE.COMPRESS.CLASS"));
 		try {
-			compressClass = ((Class<? extends CompressionCodec>) 
-					Class.forName(ConfigUtils.GLOBAL_PROPERTIES.getProperty("SEQUENCE.COMPRESS.CLASS")));
+			compressClass = (Class<? extends CompressionCodec>)Class.forName(Constants.COMPRESS_CLASS);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -88,6 +84,5 @@ public class GlobalTools {
 		SequenceFileOutputFormat.setCompressOutput(job, true);
 		SequenceFileOutputFormat.setOutputCompressorClass(job, compressClass);
 		SequenceFileOutputFormat.setOutputCompressionType(job, CompressionType.BLOCK);
-//		LazyOutputFormat.setOutputFormatClass(job, SequenceFileOutputFormat.class);
 	}
 }

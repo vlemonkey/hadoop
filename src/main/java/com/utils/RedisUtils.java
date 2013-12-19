@@ -222,7 +222,7 @@ public final class RedisUtils {
 		String tableName = "IMEI";
 		
 		Map<String, String> map = findTableMap(tableName);
-		map = findTableMapByCustValue(tableName, "PRICE", null);
+		map = findTableMapByCustValue(tableName, "TAC", "");
 		printMapTopN(map, 3);
 		
 		closeRedis();

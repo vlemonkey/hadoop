@@ -10,7 +10,7 @@ import com.utils.ConfigUtils;
 
 public class ReadEL {
 	
-	public static Pattern EL_PATTERN = Pattern.compile("\\$\\{(.*?)\\}");
+	public static Pattern EL_PATTERN = Pattern.compile("\\$\\{([^\\}]*)\\}");
 	public static Matcher matcher = EL_PATTERN.matcher("");
 	
 	/**
@@ -30,29 +30,38 @@ public class ReadEL {
 	 * @return
 	 */
 	private static String getELValue(Object value) {
-		if (null == value) {
-			return null;
-		}
-		
-		String tempValue = String.valueOf(value).toUpperCase();
-		matcher.reset(tempValue);
+		return null != value ? replaceValue(value) : null;
+	}
+
+	
+	/**
+	 * 替换prop文件value中包含${}的部分
+	 * @param value
+	 * @return
+	 */
+	private static String replaceValue(Object value) {
+		matcher.reset(String.valueOf(value).toUpperCase());
 		String temp = null;
+		
+		StringBuffer sb = new StringBuffer(200);
 		while (matcher.find()) {
 			temp = ConfigUtils.GLOBAL_PROPERTIES.getProperty(matcher.group(1));
 			if (null != temp) {
-				tempValue = tempValue.replace(matcher.group(), temp);
+				matcher.appendReplacement(sb, temp);
 			}else {
-				System.err.printf("global.properties does't contains this key:%s\n", matcher.group(1));
+				System.err.printf("global.properties does't contains this key:${%s}\n", matcher.group(1));
 				throw new NullPointerException();
 			}
 		}
 		
-		return tempValue;
+		matcher.appendTail(sb);
+		return sb.toString();
 	}
 	
 	public static void main(String[] args) {
-		Properties properties = ConfigUtils.getConfig("/config/test.properties");
-		replaceProp(properties);
+		Properties properties = null;
+		
+		properties = ConfigUtils.getConfig("/config/test.properties");
 		System.out.printf("name:%s\n", properties.get("name"));
 		System.out.printf("age:%s\n", properties.get("age"));
 		System.out.printf("r:%s\n", properties.get("r"));

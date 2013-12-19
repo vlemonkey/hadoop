@@ -20,14 +20,14 @@ public class ConfigUtils {
 	
 	public static final Properties GLOBAL_PROPERTIES = getGlobalProperites();
 	public static File file = null;
-
+	
 	/**
 	 * 获取global配置文件别名路径
 	 * 对应的properties
 	 * @return
 	 */
 	public static Properties getGlobalProperites() {
-		return getConfig(getConfig(Constants.GLOBAL_PROP).getProperty("alias"));
+		return getDirectConfig(getDirectConfig(Constants.GLOBAL_PROP).getProperty("alias"));
 	}
 	
 	/**
@@ -36,6 +36,19 @@ public class ConfigUtils {
 	 * @return
 	 */
 	public static Properties getConfig(String fileName) {
+		Properties prop = getDirectConfig(fileName);
+		if (null != prop) {
+			ReadEL.replaceProp(prop);
+		}
+		return prop;
+	}
+	
+	/**
+	 * 直接返回配置文件信息
+	 * @param fileName
+	 * @return
+	 */
+	private static Properties getDirectConfig(String fileName) {
 		File file = getDistributedCahceProp(fileName);
 		InputStream inputStream = null;
 		Properties prop = new Properties();
@@ -43,15 +56,15 @@ public class ConfigUtils {
 			inputStream = file != null ? new BufferedInputStream(new FileInputStream(file))
 				: ConfigUtils.class.getResourceAsStream(fileName);
 			prop.load(inputStream);
-			ReadEL.replaceProp(prop);
 			return prop;
 		} catch (Exception e) {
-			System.err.printf("propeties file not exist:%s\n", fileName);
 			e.printStackTrace();
 			return null;
 		}finally {
+			file = null;
 			IOUtils.closeQuietly(inputStream);
 		}
+		
 	}
 	
 	/**
@@ -62,7 +75,7 @@ public class ConfigUtils {
 	 * @return
 	 */
 	public static File getDistributedCahceProp(String filePath) {
-		if (null == file || !file.exists()) {
+		if (null == file) {
 			file = new File(Constants.DISTRIBUTEDCAHCHE_CONFIG); // config--HDFS distributedcache默认配置文件名
 		}
 

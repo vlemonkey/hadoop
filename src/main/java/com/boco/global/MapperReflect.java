@@ -126,6 +126,9 @@ public class MapperReflect {
 	 */
 	public String[] map(String value) {
 		String[] originalValues = delimiterIn.split(value, MAX_SPLIT); // 原始数据切分
+		if (originalValues.length != fieldIndexMap.size()) {
+			return null;
+		}
 		param.setOriginalValues(originalValues); // 设置变量
 
 		String[] rets = null; // 保存结果数据
