@@ -2,6 +2,7 @@ package com.boco.global;
 
 import java.net.URI;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.io.SequenceFile.CompressionType;
@@ -10,6 +11,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+
+import com.utils.ConfigUtils;
 
 public class GlobalTools {
 	
@@ -84,5 +87,13 @@ public class GlobalTools {
 		SequenceFileOutputFormat.setCompressOutput(job, true);
 		SequenceFileOutputFormat.setOutputCompressorClass(job, compressClass);
 		SequenceFileOutputFormat.setOutputCompressionType(job, CompressionType.BLOCK);
+	}
+	
+	/**
+	 * 是否开启调试模式
+	 * @return
+	 */
+	public static boolean isDebug() {
+		return StringUtils.equals("ON", ConfigUtils.getGlobalValue("DEBUG"));
 	}
 }

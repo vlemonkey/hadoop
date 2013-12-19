@@ -9,9 +9,6 @@ public class Constants {
 	// 项目名称
 	public static final String PROJECT_NAME = "hadoop";
 	
-	// debug
-	public static boolean IS_DEBUG = true;
-	
 	/* ***************************基本不变的设置************************************ */
 
 	public static final String DEFAULT_DELIMITER = ","; // 默认分割符

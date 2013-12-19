@@ -1,6 +1,5 @@
 package com.boco.model2;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -13,7 +12,6 @@ import org.apache.hadoop.util.ToolRunner;
 
 import com.boco.global.CounterUtils;
 import com.boco.global.GlobalTools;
-import com.utils.ConfigUtils;
 
 public class ModelDriver extends Configured implements Tool{
 	
@@ -35,11 +33,11 @@ public class ModelDriver extends Configured implements Tool{
 		
 		job.setMapperClass(ModelMapper.class);
 		job.setReducerClass(ModelReducer.class);
-		
+		 
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(Text.class);
 		
-		if(StringUtils.equals("ON", ConfigUtils.getGlobalValue("DEBUG"))) {
+		if(GlobalTools.isDebug()) {
 			System.out.println("调试模式开启!");
 		}
 		
