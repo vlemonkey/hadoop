@@ -31,6 +31,15 @@ public class ConfigUtils {
 	}
 	
 	/**
+	 * 读取全局配置文件里的信息
+	 * @param key
+	 * @return
+	 */
+	public static String getGlobalValue(String key) {
+		return GLOBAL_PROPERTIES.getProperty(key);
+	}
+	
+	/**
 	 * 递归取得配置文件的properties
 	 * @param filePath 文件路径
 	 * @return
@@ -103,5 +112,6 @@ public class ConfigUtils {
 	public static void main(String[] args) {
 		Properties prop = ConfigUtils.getConfig("/config/reflect.properties");
 		System.out.println(prop.getProperty("B.VERIFYCLASS"));
+		System.out.println(getGlobalValue("DEBUG"));
 	}
 }

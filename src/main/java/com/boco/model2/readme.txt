@@ -53,5 +53,6 @@ Mapper && Reducer
 	context.getCounter(COUNTER.ReducerOutput).increment(1); // Reducer输出条数
 	*/
 	
-
+4.ConfigUtils.getGlobalValue(String key) 方法可以返回global文件里的参数
+key:DEBUG 标识是否开启调试模式
 
