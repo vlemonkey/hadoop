@@ -15,18 +15,15 @@ public class ModelMapper extends Mapper<Object, Text, Text, Text>{
 	
 	public static Properties prop = ConfigUtils.getConfig("hour/TwSeHostOrderD.properties");
 	
-	@Override
 	public void map(Object key, Text value, Context context)
 		throws IOException, InterruptedException{
 		
 	}
 	
-	@Override
 	public void setup(Context context) throws IOException, InterruptedException{
 		System.out.println("prop value value:" + prop.getProperty("DEFAULT.VALUE.ORDER_NOW"));
 	}
 	
-	@Override
 	public void cleanup(Context context) throws IOException, InterruptedException{
 		
 	}
